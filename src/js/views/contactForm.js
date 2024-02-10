@@ -1,53 +1,92 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import "../../styles/home.css";
 import { Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 
 const ContactForm = () => {
 
+    const { actions } = useContext(Context);
+
+    const [formData, setFormData] = useState({
+        fullName: "",
+        email: "",
+        phone: "",
+        address: "",
+        agenda_slug: "davidpardomartin-agenda",
+    });
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("como son los datos?????", formData);
+        actions.createContact(formData);
+    };
+
     return (
         <div>
-
             <div className="container d-flex justify-content-center">
                 <h1>Add a new contact</h1>
             </div>
 
             <div className="container">
-
-                <Form>
+                <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Full Name</Form.Label>
-                        <Form.Control type="text" placeholder="Full name" />
+                        <Form.Control
+                            type="text"
+                            placeholder="Full name"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleChange}
+                        />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" placeholder="Enter Email" />
+                        <Form.Control
+                            type="email"
+                            placeholder="Enter Email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
                         <Form.Label>Phone</Form.Label>
-                        <Form.Control type="number" placeholder="enter phone" />
+                        <Form.Control
+                            type="number"
+                            placeholder="enter phone"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                        />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
                         <Form.Label>Address</Form.Label>
-                        <Form.Control type="text" placeholder="Enter address" />
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter address"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleChange}
+                        />
                     </Form.Group>
 
+                    <div className="d-flex justify-content-center">
+                        <Button type="submit" variant="primary">
+                            Save
+                        </Button>
+                    </div>
                 </Form>
-
-            </div>
-
-
-            <div className="d-flex justify-content-center">
-                <Button variant="primary">Save</Button>
             </div>
 
             <div className="container">
-                <Link to="/contact-list">
-                    or get back to contacts
-                </Link>
+                <Link to="/contact-list">or get back to contacts</Link>
             </div>
-
         </div>
     );
 
