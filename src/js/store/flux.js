@@ -1,19 +1,19 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
+			// demo: [
+			// 	{
+			// 		title: "FIRST",
+			// 		background: "white",
+			// 		initial: "white"
+			// 	},
 
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			],
+			// 	{
+			// 		title: "SECOND",
+			// 		background: "white",
+			// 		initial: "white"
+			// 	}
+			// ],
 
 			contacts: [],
 
@@ -21,7 +21,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		actions: {
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+				// getActions().changeColor(0, "green");
 			},
 			loadSomeData: () => {
 				/**
@@ -30,29 +30,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			changeColor: (index, color) => {
 				//get the store
-				const store = getStore();
+				// const store = getStore();
 
 				//we have to loop the entire demo array to look for the respective index
 				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+				// const demo = store.demo.map((elm, i) => {
+				// 	if (i === index) elm.background = color;
+				// 	return elm;
+				// });
 
 				//reset the global store
-				setStore({ demo: demo });
+				// setStore({ demo: demo });
 
 			},
 
-			getContacts: async (formData) => {
+			getContacts: async () => {
 				try {
-					const response = await fetch("https://playground.4geeks.com/apis/fake/contact/agenda/davidpardomartin-agenda", {
-						method: "GET",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(formData),
-					});
+					const requestOptions = {
+						method: 'GET',
+						redirect: 'follow'
+					};
+
+					const response = await fetch("https://playground.4geeks.com/apis/fake/contact/agenda/davidpardomartin-agenda", requestOptions);
 
 					if (response.ok) {
 						const data = await response.json();
@@ -66,26 +65,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+
 			createContact: async (formData) => {
 				try {
-					const response = await fetch("https://playground.4geeks.com/apis/fake/contact/", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(formData),
+					const myHeaders = new Headers();
+					myHeaders.append("Content-Type", "application/json");
+
+					const raw = JSON.stringify({
+						"full_name": formData.fullName,
+						"email": formData.email,
+						"agenda_slug": "davidpardomartin-agenda",
+						"address": formData.address,
+						"phone": formData.phone
 					});
+
+					const requestOptions = {
+						method: 'POST',
+						headers: myHeaders,
+						body: raw,
+						redirect: 'follow'
+					};
+
+					const response = await fetch("https://playground.4geeks.com/apis/fake/contact/", requestOptions);
 
 					if (response.ok) {
 						console.log("Contacto creado exitosamente");
-
-						const newContact = await response.json();
-
-						const store = getStore();
-
-						const updatedContacts = [...store.contacts, newContact];
-
-						setStore({ contacts: updatedContacts });
 					} else {
 						const errorBody = await response.text();
 						console.error("Error al crear el contacto - Respuesta:", response);
