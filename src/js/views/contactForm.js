@@ -17,6 +17,7 @@ const ContactForm = () => {
         agenda_slug: "davidpardomartin-agenda",
     });
 
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -26,6 +27,8 @@ const ContactForm = () => {
         console.log("como son los datos?????", formData);
         actions.createContact(formData);
     };
+
+
 
     return (
         <div>

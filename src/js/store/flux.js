@@ -100,6 +100,66 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			updateContact: async (id, formData) => {
+				try {
+					const myHeaders = new Headers();
+					myHeaders.append("Content-Type", "application/json");
+
+					const raw = JSON.stringify({
+						"full_name": formData.fullName,
+						"email": formData.email,
+						"agenda_slug": "davidpardomartin-agenda", // Reemplaza esto con el valor correcto
+						"address": formData.address,
+						"phone": formData.phone
+					});
+
+					const requestOptions = {
+						method: 'PUT',
+						headers: myHeaders,
+						body: raw,
+						redirect: 'follow'
+					};
+
+					const response = await fetch(`https://playground.4geeks.com/apis/fake/contact/${id}`, requestOptions);
+
+					if (response.ok) {
+						console.log("Contacto actualizado exitosamente");
+					} else {
+						const errorBody = await response.text();
+						console.error("Error al actualizar el contacto - Respuesta:", response);
+						console.error("Mensaje de error completo:", errorBody);
+					}
+				} catch (error) {
+					console.error("Error al realizar la solicitud:", error);
+				}
+			},
+
+			deleteContact: async (id) => {
+				try {
+					const requestOptions = {
+						method: "DELETE",
+						redirect: "follow",
+					};
+
+					const response = await fetch(
+						`https://playground.4geeks.com/apis/fake/contact/${id}`,
+						requestOptions
+					);
+
+					if (response.ok) {
+						console.log("Contacto eliminado exitosamente");
+						getActions().getContacts(); // Actualizar la lista de contactos después de eliminar un contacto
+					} else {
+						console.error("Error al eliminar el contacto");
+					}
+					// alert("The contact is saved. If you want to do more, use again."); LO he cambiado por un toast
+				} catch (error) {
+					console.error("Error al realizar la solicitud:", error);
+				}
+			},
+
+
+
 		}
 	};
 };
