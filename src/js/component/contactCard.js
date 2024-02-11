@@ -75,7 +75,9 @@ const ContactCard = ({ contact }) => {
                     <div className="col-12 col-md-3 p-3 d-flex flex-column justify-content-between">
                         <div></div>
                         <div className="d-flex justify-content-center">
-                            <button className="btn pe-5">
+                            <button className="btn pe-5"
+                                onClick={() => actions.setSelectedContact(contact)}
+                            >
                                 <FontAwesomeIcon icon={faPencilAlt} size="lg" />
                             </button>
                             <button

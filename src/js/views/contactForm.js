@@ -3,9 +3,14 @@ import "../../styles/home.css";
 import { Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
+
 
 
 const ContactForm = () => {
+
+    const navigate = useNavigate();
+
 
     const { actions } = useContext(Context);
 
@@ -26,6 +31,8 @@ const ContactForm = () => {
         e.preventDefault();
         console.log("como son los datos?????", formData);
         actions.createContact(formData);
+        navigate("/contact-list");
+        actions.getContacts(formData)
     };
 
 
