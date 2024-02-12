@@ -101,15 +101,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			updateContact: async (id, formData) => {
+			updateContact: async (formData, id) => {
 				try {
 					const myHeaders = new Headers();
 					myHeaders.append("Content-Type", "application/json");
 
 					const raw = JSON.stringify({
-						"full_name": formData.fullName,
+						"full_name": formData.full_name,
 						"email": formData.email,
-						"agenda_slug": "davidpardomartin-agenda", // Reemplaza esto con el valor correcto
+						"agenda_slug": "davidpardomartin-agenda",
 						"address": formData.address,
 						"phone": formData.phone
 					});

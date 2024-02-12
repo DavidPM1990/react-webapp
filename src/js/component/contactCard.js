@@ -1,9 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faLocationArrow,
+    faLocationDot,
     faPhone,
     faEnvelope,
     faPencilAlt,
@@ -12,14 +11,67 @@ import {
 
 import ModalDelete from "./modalDelete";
 
+import ModalForm from "./modalForm";
+
 const ContactCard = ({ contact }) => {
+
+    const { actions } = useContext(Context);
 
     const [showModal, setShowModal] = useState(false);
     const [contactIdToDelete, setContactIdToDelete] = useState(null);
+    const [show, setShow] = useState(false);
+    const [selectedContact, setSelectedContact] = useState(null);
+    const [newContact, setNewContact] = useState({
+        full_name: "",
+        email: "",
+        phone: "",
+        address: "",
 
-    const { store, actions } = useContext(Context);
+    });
+
+    console.log("Objeto contacto y sus propiedades --->", contact)
+
+    useEffect(() => {
+        if (selectedContact) {
+            setNewContact({
+                full_name: selectedContact.full_name,
+                email: selectedContact.email,
+                phone: selectedContact.phone,
+                address: selectedContact.address,
+                img: selectedContact.img,
+            });
+        }
+    }, [selectedContact]);
 
 
+    const handleShow = () => {
+        setSelectedContact(contact);
+        setShow(true);
+    };
+
+    const handleClose = () => setShow(false);
+
+    const handleChange = (e) => {
+        setNewContact({ ...newContact, [e.target.name]: e.target.value });
+    };
+
+    const handleSave = () => {
+
+        console.log("ID del contacto:", contact.id);
+
+        console.log("Full name:", newContact.full_name);
+
+        actions
+            .updateContact(newContact, contact.id)
+            .then(() => {
+                handleClose();
+                actions.getContacts();
+
+            })
+            .catch((error) => {
+                console.error("Error updating contact:", error);
+            });
+    };
 
     const handleDeleteContact = (id) => {
         setContactIdToDelete(id);
@@ -45,10 +97,10 @@ const ContactCard = ({ contact }) => {
                 <div className="row no-gutters">
                     <div className="col-12 col-md-3">
                         <img
-                            src={contact.profileImage}
-                            className="ps-5 p-3 rounded-circle"
-                            style={{ height: "200px", width: "100%" }}
-                            alt="..."
+                            src="https://media.licdn.com/dms/image/D4D03AQF-pjuxDYqkYw/profile-displayphoto-shrink_400_400/0/1663532698544?e=1713398400&v=beta&t=Ra67bocf8sHgITAANXCvRG73ljpqVEK3rFIJhGyvrvU"
+                            className="mt-3 ms-5 pt-2 pb-2 ps-4 pe-4 rounded-circle"
+                            style={{ height: "150px", width: "75%" }}
+                            alt="alternativeImage"
                         />
                     </div>
                     <div className="col-12 col-md-6">
@@ -56,7 +108,7 @@ const ContactCard = ({ contact }) => {
                             <h5 className="card-title pb-3 ">{contact.full_name}</h5>
                             <p className="card-text text-secondary fw-bolder">
                                 <FontAwesomeIcon
-                                    icon={faLocationArrow}
+                                    icon={faLocationDot}
                                     size="lg"
                                     className="pe-4"
                                 />
@@ -73,10 +125,9 @@ const ContactCard = ({ contact }) => {
                         </div>
                     </div>
                     <div className="col-12 col-md-3 p-3 d-flex flex-column justify-content-between">
-                        <div></div>
-                        <div className="d-flex justify-content-center">
+                        <div className="d-flex justify-content-center mb-5 pb-5">
                             <button className="btn pe-5"
-                                onClick={() => actions.setSelectedContact(contact)}
+                                onClick={handleShow}
                             >
                                 <FontAwesomeIcon icon={faPencilAlt} size="lg" />
                             </button>
@@ -90,6 +141,13 @@ const ContactCard = ({ contact }) => {
                         </div>
                     </div>
                 </div>
+                <ModalForm
+                    show={show}
+                    handleClose={handleClose}
+                    contact={newContact}
+                    handleChange={handleChange}
+                    handleSave={handleSave}
+                />
             </div>
             {showModal && (
                 <ModalDelete
@@ -99,8 +157,6 @@ const ContactCard = ({ contact }) => {
                 />
             )}
         </div>
-
-
     );
 };
 

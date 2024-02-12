@@ -5,12 +5,9 @@ import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
-
-
 const ContactForm = () => {
 
     const navigate = useNavigate();
-
 
     const { actions } = useContext(Context);
 
@@ -29,13 +26,15 @@ const ContactForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!formData.fullName || !formData.email || !formData.phone || !formData.address) {
+            alert("Please fill in all the required fields");
+            return;
+        }
         console.log("como son los datos?????", formData);
         actions.createContact(formData);
-        navigate("/contact-list");
+        navigate("/");
         actions.getContacts(formData)
     };
-
-
 
     return (
         <div>
@@ -69,7 +68,7 @@ const ContactForm = () => {
                         <Form.Label>Phone</Form.Label>
                         <Form.Control
                             type="number"
-                            placeholder="enter phone"
+                            placeholder="Enter phone"
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
@@ -95,7 +94,7 @@ const ContactForm = () => {
             </div>
 
             <div className="container">
-                <Link to="/contact-list">or get back to contacts</Link>
+                <Link to="/">or get back to contacts</Link>
             </div>
         </div>
     );

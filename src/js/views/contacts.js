@@ -8,7 +8,6 @@ const ContactList = () => {
     const { store, actions } = useContext(Context);
 
     useEffect(() => {
-
         actions.getContacts();
     }, []);
 
