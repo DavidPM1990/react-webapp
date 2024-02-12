@@ -149,11 +149,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					if (response.ok) {
 						console.log("Contacto eliminado exitosamente");
-						getActions().getContacts(); // Actualizar la lista de contactos después de eliminar un contacto
+						getActions().getContacts();
 					} else {
 						console.error("Error al eliminar el contacto");
 					}
-					// alert("The contact is saved. If you want to do more, use again."); LO he cambiado por un toast
+
 				} catch (error) {
 					console.error("Error al realizar la solicitud:", error);
 				}
